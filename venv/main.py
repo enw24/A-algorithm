@@ -1,4 +1,4 @@
-import csv
+import csv, pygame
 datatfile = open('Colorado.csv','r')
 datareader = csv.reader(datatfile)
 data = []
@@ -43,7 +43,7 @@ for i in range(0, len(data)):
 
 destination = 5
 starting = 300
-
+final = []
 # Calculate altToEnd on shortest path
 # for i in range(0, 480):
 #    tempList = []
@@ -111,6 +111,7 @@ for z in range(0,10000):
     currentPath = queueList[0][5].copy()
     if currentX == 479 and currentY == destination:
         print("DONE")
+        print('The lowest change in altitude to the destination is', queueList[0][2])
         break
     #print("current x and y", currentX, currentY)
     # add paths to queue
@@ -141,9 +142,26 @@ for z in range(0,10000):
                 if not addedFlag:
                     queueList.append(queueItem.copy())
     CleanseList()
+
     print('first five in queueList are:')
     l = len(queueList)
     if l > 10:
         l = 10
     for z in range(0, l):
         print(queueList[z])
+gameExit=False
+while not gameExit:
+    pygame.init()
+    white = (255, 255, 255)
+    black = (0, 0, 0)
+    red = (255, 0, 0)
+    gameDisplay = pygame.display.set_mode((480, 480))  # sets screen
+    gameDisplay.fill(white)
+    pygame.display.set_caption('path')
+    for i in queueList[0][5]:
+        pygame.draw.rect(gameDisplay, red, [i[0], i[1], 1, 1])
+    pygame.display.update()
+    for event in pygame.event.get():
+        #print(event)
+        if event.type == pygame.QUIT:
+            gameExit = True
